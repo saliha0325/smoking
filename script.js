@@ -137,5 +137,8 @@ onmousemove = function (e) {
 };
 
 setInterval(function(){
-    party.addsmoke(innerWidth/2, innerHeight, 1);
+     const spread = 300; // width in pixels for smoke spread
+    const centerX = innerWidth / 2;
+    const randomX = centerX + (Math.random() * spread - spread / 2);
+    party.addsmoke(randomX, innerHeight, 1);
 }, 100);
