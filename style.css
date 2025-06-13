@@ -10,8 +10,8 @@ html, body {
 		text-align: center;
 	}
 	#hi a {
-		color: #fff;
-		font-size: 80px;
+		color: transparent;
+		font-size: 10px;
 		text-decoration: none;		
 		font-family: Lobster;
 	}
