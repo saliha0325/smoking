@@ -1,99 +1,157 @@
-var smokemachine = function (context) {
-  var raf = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-  var lastframe, currentparticles = [], pendingparticles = [];
+var smokemachine = function (context){
+    var polyfillAnimFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                                  window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+    var lastframe;
+    var currentparticles = [];
+    var pendingparticles = [];
 
-  function createBuffer(color) {
-    var buffer = document.createElement('canvas'),
-        bctx = buffer.getContext('2d');
-    buffer.width = buffer.height = 20;
-    var opacities = [/* same opacity array as before */];
+    function createBuffer(color) {
+        var buffer = document.createElement('canvas'),
+            bctx = buffer.getContext('2d');
 
-    var data = bctx.createImageData(20, 20);
-    for (var i = 0; i < data.data.length; i += 4) {
-      data.data[i] = color[0];
-      data.data[i+1] = color[1];
-      data.data[i+2] = color[2];
-      data.data[i+3] = opacities[i/4];
+        buffer.width = 20;
+        buffer.height = 20;
+
+        var opacities = [
+            0, 0, 1, 1, 2, 2, 4, 4, 6, 6, 9, 9, 13, 13, 18, 18, 24, 24, 31, 31,
+            39, 39, 48, 48, 58, 58, 69, 69, 81, 81, 94, 94, 108, 108, 123, 123,
+            139, 139, 156, 156, 174, 174, 193, 193, 213, 213, 234, 234, 255, 255,
+            234, 234, 213, 213, 193, 193, 174, 174, 156, 156, 139, 139, 123, 123,
+            108, 108, 94, 94, 81, 81, 69, 69, 58, 58, 48, 48, 39, 39, 31, 31,
+            24, 24, 18, 18, 13, 13, 9, 9, 6, 6, 4, 4, 2, 2, 1, 1, 0, 0
+        ];
+
+        var data = bctx.createImageData(20, 20);
+        var d = data.data;
+
+        for (var i = 0; i < d.length; i += 4) {
+            d[i] = color[0];
+            d[i + 1] = color[1];
+            d[i + 2] = color[2];
+            d[i + 3] = opacities[i / 4];
+        }
+
+        bctx.putImageData(data, 0, 0);
+        return buffer;
     }
-    bctx.putImageData(data, 0, 0);
-    return buffer;
-  }
 
-  var buffers = [
-    createBuffer([255, 150, 150]), // light red
-    createBuffer([255, 75, 75]),   // medium red
-    createBuffer([255, 0, 0]),     // pure red
-  ];
+    var redBuffer = createBuffer([255, 0, 0]);
+    var whiteBuffer = createBuffer([255, 255, 255]);
 
-  function particle(x, y, l) {
-    var buf = buffers[Math.floor(Math.random()*buffers.length)];
-    this.buffer = buf;
-    this.x = x; this.y = y; this.age = 0;
-    this.vx = (Math.random()*8-4)/100;
-    this.startvy = -(Math.random()*30+10)/100;
-    this.vy = this.startvy;
-    this.lifetime = Math.random()*l + l/2;
-    this.finalscale = 10 + Math.random()*3;
-  }
+    var imagewidth = 20 * 5;
+    var imageheight = 20 * 5;
 
-  particle.prototype.update = function(dt) {
-    this.x += this.vx*dt;
-    this.y += this.vy*dt;
-    var frac = Math.sqrt(this.age/this.lifetime);
-    this.vy = this.startvy*(1-frac);
-    this.age += dt;
-    this.scale = frac*this.finalscale;
-  };
+    function particle(x, y, l, colorBuffer) {
+        this.x = x;
+        this.y = y;
+        this.age = 0;
+        this.vx = (Math.random() * 8 - 4) / 100;
+        this.startvy = -(Math.random() * 30 + 10) / 100;
+        this.vy = this.startvy;
+        this.scale = Math.random() * 0.5;
+        this.lifetime = Math.random() * l + l / 2;
+        this.finalscale = 8 + this.scale + Math.random() * 3;
+        this.buffer = colorBuffer;
 
-  particle.prototype.draw = function() {
-    var alpha = (1 - Math.abs(1 - 2*this.age/this.lifetime)) / 8;
-    context.globalAlpha = alpha;
-    var size = this.scale * 100; // canvas scaling
-    context.drawImage(this.buffer, this.x-size/2, this.y-size/2, size, size);
-  };
+        this.update = function (deltatime) {
+            this.x += this.vx * deltatime;
+            this.y += this.vy * deltatime;
+            var frac = Math.pow((this.age) / this.lifetime, .5);
+            this.vy = (1 - frac) * this.startvy;
+            this.age += deltatime;
+            this.scale = frac * this.finalscale;
+        };
 
-  function addparticles(x, y, n, l) {
-    n = n || 10;
-    for (var i = 0; i < n; i++) {
-      pendingparticles.push(new particle(x, y, l || 4000));
+        this.draw = function () {
+            context.globalAlpha = (1 - Math.abs(1 - 2 * (this.age) / this.lifetime)) / 8;
+            var off = this.scale * imagewidth / 2;
+            var xmin = this.x - off;
+            var ymin = this.y - off;
+            context.drawImage(this.buffer, xmin, ymin, this.scale * imagewidth, this.scale * imageheight);
+        };
     }
-  }
 
-  function update(dt) {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    var np = [];
-    currentparticles = currentparticles.concat(pendingparticles);
-    pendingparticles = [];
-    currentparticles.forEach(p => {
-      p.update(dt);
-      if (p.age < p.lifetime) {
-        p.draw();
-        np.push(p);
-      }
-    });
-    currentparticles = np;
-  }
+    function addparticles(x, y, n, lifetime) {
+        lifetime = lifetime || 4000;
+        n = n || 10;
+        if (n < 1) {
+            if (Math.random() <= n) {
+                var buffer = Math.random() < 0.5 ? redBuffer : whiteBuffer;
+                pendingparticles.push(new particle(x, y, lifetime, buffer));
+            }
+        } else {
+            for (var i = 0; i < n; i++) {
+                var buffer = Math.random() < 0.5 ? redBuffer : whiteBuffer;
+                pendingparticles.push(new particle(x, y, lifetime, buffer));
+            }
+        }
+    }
 
-  function frame(time) {
-    if (!lastframe) lastframe = time;
-    update(time - lastframe);
-    lastframe = time;
-    raf(frame);
-  }
+    function updateanddrawparticles(deltatime) {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        deltatime = deltatime || 16;
+        var newparticles = [];
+        currentparticles = currentparticles.concat(pendingparticles);
+        pendingparticles = [];
 
-  return {
-    start: () => raf(frame),
-    addsmoke: addparticles
-  };
+        currentparticles.forEach(function (p) {
+            p.update(deltatime);
+            if (p.age < p.lifetime) {
+                p.draw();
+                newparticles.push(p);
+            }
+        });
+        currentparticles = newparticles;
+    }
+
+    function frame(time) {
+        if (running) {
+            var deltat = time - lastframe;
+            lastframe = time;
+
+            updateanddrawparticles(deltat);
+            polyfillAnimFrame(frame);
+        }
+    }
+
+    var running = false;
+
+    function start() {
+        running = true;
+        polyfillAnimFrame(function (time) {
+            lastframe = time;
+            polyfillAnimFrame(frame);
+        });
+    }
+
+    function stop() {
+        running = false;
+    }
+
+    return {
+        start: start,
+        stop: stop,
+        step: updateanddrawparticles,
+        addsmoke: addparticles
+    }
 };
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
 var party = smokemachine(ctx);
-party.start();
+party.start(); // start animating
 
-onmousemove = (e) => party.addsmoke(e.clientX, e.clientY, 5);
-setInterval(() => party.addsmoke(canvas.width/2, canvas.height, 7), 100);
+onmousemove = function (e) {
+    var x = e.clientX;
+    var y = e.clientY;
+    var n = 0.5;
+    var t = Math.floor(Math.random() * 200) + 3800;
+    party.addsmoke(x, y, n, t);
+};
+
+setInterval(function () {
+    party.addsmoke(innerWidth / 2, innerHeight, 3);
+}, 100);
