@@ -1,4 +1,4 @@
-var smokemachine = function (context, color){
+    var smokemachine = function (context, color){
     color = color || [24, 46.8, 48.2];
     var polyfillAnimFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -137,8 +137,6 @@ onmousemove = function (e) {
 };
 
 setInterval(function(){
-     const spread = 300; // width in pixels for smoke spread
-    const centerX = innerWidth / 2;
-    const randomX = centerX + (Math.random() * spread - spread / 2);
+     const randomX = Math.random() * innerWidth;
     party.addsmoke(randomX, innerHeight, 1);
 }, 100);
