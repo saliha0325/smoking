@@ -1,5 +1,5 @@
 var smokemachine = function (context, color){
-    color = color || [24, 46.8, 48.2];
+    color = color || [101, 67, 33]; // Dark brown color
     var polyfillAnimFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
     var lastframe;
@@ -38,7 +38,7 @@ var smokemachine = function (context, color){
         this.vy = this.startvy;
         this.scale = Math.random()*.5;
         this.lifetime = Math.random()*l+l/2;
-        this.finalscale = 5+this.scale+Math.random();
+        this.finalscale = 6 + this.scale + Math.random() * 2; // Wider smoke
 
         this.update = function(deltatime){
             this.x+=this.vx*deltatime;
@@ -59,7 +59,6 @@ var smokemachine = function (context, color){
             context.drawImage(buffer, xmin, ymin, xmax-xmin, ymax-ymin);
         };
     }
-
 
     function addparticles(x,y,n,lifetime){
         lifetime = lifetime || 4000;
@@ -124,8 +123,7 @@ var ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-// Change this array to the RGB values of your lighter shade of #c9b581
-var party = smokemachine(ctx, [217, 203, 167]); 
+var party = smokemachine(ctx, [101, 67, 33]); // Dark brown
 party.start(); // start animating
 
 onmousemove = function (e) {
