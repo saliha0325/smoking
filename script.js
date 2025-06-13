@@ -3,8 +3,8 @@ var ctx = canvas.getContext('2d');
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-// Set the smoke color to light brown (#c9b581)
-var party = smokemachine(ctx, [201, 181, 129]); 
+// Changed to slightly darker brown: #b89e65
+var party = smokemachine(ctx, [184, 158, 101]); 
 party.start(); // start animating
 
 onmousemove = function (e) {
@@ -16,6 +16,6 @@ onmousemove = function (e) {
 };
 
 setInterval(function(){
-     const randomX = Math.random() * innerWidth;
+    const randomX = Math.random() * innerWidth;
     party.addsmoke(randomX, innerHeight, 1);
 }, 100);
