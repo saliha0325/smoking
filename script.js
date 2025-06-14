@@ -1,6 +1,6 @@
 var smokemachine = function (context){
     // Mix of pure white and light brown (average)
-    var color = [216, 197, 123];  // mixed color of white and light brown
+    var color = [223, 200, 107];  // mixed color of white and light brown
 
     var polyfillAnimFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
