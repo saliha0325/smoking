@@ -1,6 +1,6 @@
 var smokemachine = function (context){
     // Mix of pure white and light brown (average)
-    var color = [240, 245, 245];  // mixed color of white and light brown
+    var color = [232, 217, 197];  // mixed color of white and light brown
 
     var polyfillAnimFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
                                   window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
@@ -138,4 +138,4 @@ onmousemove = function (e) {
 setInterval(function(){
     const randomX = Math.random() * innerWidth;
     party.addsmoke(randomX, innerHeight, 1);
-}, 100);  
+}, 100); 
