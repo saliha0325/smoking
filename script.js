@@ -132,7 +132,7 @@ onmousemove = function (e) {
     var y = e.clientY;
     var n = .5;
     var t = Math.floor(Math.random() * 200) + 3800;
-    party.addsmoke(x, y, n, t);
+    party.addsmoke(centerX, centerY, 100, 4000);
 };
 
 setInterval(function(){
