@@ -9,7 +9,7 @@ tsParticles.load("tsparticles", {
       }
     },
     color: {
-      value: "#ff0000",
+      value: "#ffffff",
       animation: {
         enable: true,
         speed: 20,
@@ -20,8 +20,7 @@ tsParticles.load("tsparticles", {
       type: "image",
       options: {
         image: {
-          src:
-            "https://www.blog.jonnycornwell.com/wp-content/uploads/2012/07/Smoke10.png",
+          src: "https://www.blog.jonnycornwell.com/wp-content/uploads/2012/07/Smoke10.png",
           width: 256,
           height: 256
         }
@@ -29,7 +28,6 @@ tsParticles.load("tsparticles", {
     },
     opacity: {
       value: 1,
-      random: false,
       animation: {
         enable: true,
         speed: 0.5,
@@ -39,26 +37,7 @@ tsParticles.load("tsparticles", {
     },
     size: {
       value: 64,
-      random: { enable: true, minimumValue: 32 },
-      animation: {
-        enable: false,
-        speed: 20,
-        minimumValue: 0.1,
-        sync: false
-      }
-    },
-    links: {
-      enable: false,
-      distance: 100,
-      color: "#ffffff",
-      opacity: 0.4,
-      width: 1
-    },
-    life: {
-      duration: {
-        value: 20
-      },
-      count: 1
+      random: { enable: true, minimumValue: 32 }
     },
     move: {
       enable: true,
@@ -68,11 +47,8 @@ tsParticles.load("tsparticles", {
       },
       speed: 3,
       direction: "top",
-      random: false,
-      straight: false,
       outModes: {
-        default: "destroy",
-        bottom: "none"
+        default: "destroy"
       },
       attract: {
         enable: true,
@@ -82,6 +58,12 @@ tsParticles.load("tsparticles", {
           y: 1200
         }
       }
+    },
+    life: {
+      duration: {
+        value: 20
+      },
+      count: 1
     }
   },
   interactivity: {
