@@ -92,7 +92,7 @@ tsParticles.load("tsparticles", {
   },
   detectRetina: true,
   background: {
-    color: "#000000"
+    color: "transparent"
   },
   emitters: {
     direction: "top",
