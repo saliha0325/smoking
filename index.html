@@ -1,24 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  
-  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/smokejs/3.1.1/css/smoke.css'><link rel="stylesheet" href="./style.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smoke Effect</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<body cz-shortcut-listen="true"><a href="https://github.com/bijection/smoke.js">
-	<img style="width: 150px; position: absolute; top: 0; right: 0; border: 0;" >
-</a>
-<canvas id="canvas" width="1777" height="898"></canvas>
-<div id="hi">
-	<a href="https://github.com/bijection/smoke.js">
-	</a>
-</div>
-</body>
-<!-- partial -->
-  <script src='https://cdnjs.cloudflare.com/ajax/libs/smokejs/3.1.1/js/smoke.js'></script><script  src="./script.js"></script>
+  <!-- Add this div for tsParticles -->
+  <div id="tsparticles"></div>
 
+  <button id="verifyBtn">Verify</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
