@@ -21,7 +21,7 @@ tsParticles.load("tsparticles", {
       options: {
         image: {
           src:
-            "https://static.wixstatic.com/media/42e808_a53589c4658c4f31971df4befc8b118d~mv2.png",
+            "https://www.blog.jonnycornwell.com/wp-content/uploads/2012/07/Smoke10.png  ",
           width: 256,
           height: 256
         }
